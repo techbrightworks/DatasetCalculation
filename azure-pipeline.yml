@@ -1,0 +1,32 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UseJavaToolInstaller@0
+    inputs:
+      versionSpec: '17'
+      addToPath: true
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'clean install'
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'your-docker-registry'
+      repository: 'dataset-calculation'
+      command: 'buildAndPush'
+      Dockerfile: '**/Dockerfile'
+      tags: 'latest'
+
+  - task: Kubernetes@1
+    inputs:
+      kubernetesServiceEndpoint: 'your-kubernetes-endpoint'
+      action: 'apply'
+      manifests: |
+        kubernetes/deployment.yaml
+        kubernetes/service.yaml

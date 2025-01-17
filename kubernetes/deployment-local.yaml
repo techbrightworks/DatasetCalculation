@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataset-calculation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dataset-calculation
+  template:
+    metadata:
+      labels:
+        app: dataset-calculation
+    spec:
+      containers:
+        - name: dataset-calculation
+          image: srinivasjastijava/dataset-calculation-repo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
